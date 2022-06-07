@@ -16,7 +16,8 @@ public class saulGoodmanButtonScript : MonoBehaviour {
 
     int currentTime = -1;
     int buttonTime = -1;
-    int[] values = { -1, -1, -1, -1, -1, -1 };
+    int[] values = { 1, 2, 3, 4, 5, 6 };
+    int chosenSlot = -1;
 
     //Logging
     static int moduleIdCounter = 1;
@@ -39,16 +40,22 @@ public class saulGoodmanButtonScript : MonoBehaviour {
         if (moduleSolved)
             return;
         currentTime = (int)Bomb.GetTime();
-        if (held && buttonTime > currentTime) {
+        if (currentTime % 30 == 0) {
+            chosenSlot = UnityEngine.Random.Range(0,30);
+        }
+        if (held && buttonTime != currentTime) {
             buttonTime = (int)Bomb.GetTime();
             SetDice();
         }
 	}
 
     void SetDice () {
+        values = values.Shuffle();
         float rx = 0; float ry = 0; float rz = 0; float rng = 0;
         for (int d = 0; d < 6; d++) {
-            values[d] = UnityEngine.Random.Range(1,7);
+            if (currentTime % 30 == chosenSlot) {
+                values[d] = d + 1;
+            }
             rng = UnityEngine.Random.Range(0,4) * 90f;
             switch (values[d]) {
                 case 1: rx = 0f; ry = rng; rz = 0f; break;
