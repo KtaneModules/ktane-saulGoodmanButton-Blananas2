@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
-using KModkit;
 
 public class saulGoodmanButtonScript : MonoBehaviour {
 
@@ -16,7 +12,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
 
     int currentTime = -1;
     int buttonTime = -1;
-    int[] values = { 1, 2, 3, 4, 5, 6 };
+    int[] values = { 6, 5, 4, 3, 2, 1 };
     int chosenSlot = -1;
 
     //Logging
@@ -28,10 +24,8 @@ public class saulGoodmanButtonScript : MonoBehaviour {
 
     void Awake () {
         moduleId = moduleIdCounter++;
-
         Saul.OnInteract += delegate () { held = true; buttonTime = (int)Bomb.GetTime(); Audio.PlaySoundAtTransform("SAUL", transform); return false; };
-        Saul.OnInteractEnded += delegate () { held = false; Audio.PlaySoundAtTransform("GOODMAN", transform); };
-        
+        Saul.OnInteractEnded += delegate () { if (held) { held = false; Audio.PlaySoundAtTransform("GOODMAN", transform); } };
     }
 	
 	// Update is called once per frame
@@ -41,7 +35,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
             return;
         currentTime = (int)Bomb.GetTime();
         if (currentTime % 30 == 0) {
-            chosenSlot = UnityEngine.Random.Range(0,30);
+            chosenSlot = Random.Range(0,30);
         }
         if (held && buttonTime != currentTime) {
             buttonTime = (int)Bomb.GetTime();
@@ -56,7 +50,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
             if (currentTime % 30 == chosenSlot) {
                 values[d] = d + 1;
             }
-            rng = UnityEngine.Random.Range(0,4) * 90f;
+            rng = Random.Range(0,4) * 90f;
             switch (values[d]) {
                 case 1: rx = 0f; ry = rng; rz = 0f; break;
                 case 2: rx = 90f; ry = 0f; rz = rng; break;
@@ -90,5 +84,36 @@ public class saulGoodmanButtonScript : MonoBehaviour {
         } else {
             Debug.LogFormat("[Saul Goodman Button #{0}] You have done poorly, lad.", moduleId);
         }
+    }
+
+    //twitch plays
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} hold [Holds the button] | !{0} release [Releases the button]";
+    #pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        if (command.EqualsIgnoreCase("hold"))
+        {
+            yield return null;
+            Saul.OnInteract();
+        }
+        else if (command.EqualsIgnoreCase("release"))
+        {
+            yield return null;
+            Saul.OnInteractEnded();
+            if (Sorted()) yield return "solve";
+        }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        if (held || (!Sorted() && !held))
+        {
+            if (!held)
+                Saul.OnInteract();
+            while (!Sorted()) yield return true;
+            Saul.OnInteractEnded();
+        }
+        while (!moduleSolved) yield return true;
     }
 }
