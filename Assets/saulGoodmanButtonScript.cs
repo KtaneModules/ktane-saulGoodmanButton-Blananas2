@@ -1,15 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Security.Cryptography;
 using UnityEngine;
+using Rnd = UnityEngine.Random;
 
 public class saulGoodmanButtonScript : MonoBehaviour {
 
     public KMBombInfo Bomb;
     public KMAudio Audio;
+    public KMRuleSeedable RuleSeedable;
+    private MonoRandom RS;
 
     public KMSelectable Saul;
     public GameObject Goodman;
     public GameObject[] Dice;
+    public GameObject AllDice;
+    public Material Fring;
 
+    bool Gustavo = false;
     int currentTime = -1;
     int buttonTime = -1;
     int[] values = { 6, 5, 4, 3, 2, 1 };
@@ -26,6 +34,13 @@ public class saulGoodmanButtonScript : MonoBehaviour {
         moduleId = moduleIdCounter++;
         Saul.OnInteract += delegate () { held = true; buttonTime = (int)Bomb.GetTime(); Audio.PlaySoundAtTransform("SAUL", transform); return false; };
         Saul.OnInteractEnded += delegate () { if (held) { held = false; Audio.PlaySoundAtTransform("GOODMAN", transform); } };
+        RS = RuleSeedable.GetRNG();
+        Gustavo = (RS.Next(0, 2) == 1);
+        if (Gustavo) {
+            AllDice.transform.localPosition = new Vector3(0.005f, 0f, -0.12f);
+            AllDice.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            Goodman.GetComponent<MeshRenderer>().material = Fring;
+        }
     }
 	
 	// Update is called once per frame
@@ -35,7 +50,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
             return;
         currentTime = (int)Bomb.GetTime();
         if (currentTime % 30 == 0) {
-            chosenSlot = Random.Range(0,30);
+            chosenSlot = Rnd.Range(0,30);
         }
         if (held && buttonTime != currentTime) {
             buttonTime = (int)Bomb.GetTime();
@@ -50,7 +65,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
             if (currentTime % 30 == chosenSlot) {
                 values[d] = d + 1;
             }
-            rng = Random.Range(0,4) * 90f;
+            rng = Rnd.Range(0,4) * 90f;
             switch (values[d]) {
                 case 1: rx = 0f; ry = rng; rz = 0f; break;
                 case 2: rx = 90f; ry = 0f; rz = rng; break;
