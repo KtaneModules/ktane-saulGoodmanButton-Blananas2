@@ -32,8 +32,8 @@ public class saulGoodmanButtonScript : MonoBehaviour {
 
     void Awake () {
         moduleId = moduleIdCounter++;
-        Saul.OnInteract += delegate () { held = true; buttonTime = (int)Bomb.GetTime(); Audio.PlaySoundAtTransform("SAUL", transform); return false; };
-        Saul.OnInteractEnded += delegate () { if (held) { held = false; Audio.PlaySoundAtTransform("GOODMAN", transform); } };
+        Saul.OnInteract += delegate () { held = true; buttonTime = (int)Bomb.GetTime(); Audio.PlaySoundAtTransform(Gustavo ? "GUS" : "SAUL", transform); return false; };
+        Saul.OnInteractEnded += delegate () { if (held) { held = false; Audio.PlaySoundAtTransform(Gustavo ? "TAVO" : "GOODMAN", transform); } };
         RS = RuleSeedable.GetRNG();
         Gustavo = (RS.Next(0, 2) == 1);
         if (Gustavo) {

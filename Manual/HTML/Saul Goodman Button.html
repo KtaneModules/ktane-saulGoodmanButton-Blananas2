@@ -12,7 +12,7 @@
     <script>
         let classNames = ["person", "word", "flavour-text"];
         let replacementText = ["Saul Goodman", "ascending",
-                                   "I had a good job until my boss accused me of stealing! I better call Saul! I was out partying minding my own business. You are under arrest! I’d better call Saul! Hi I’m Saul Goodman. Did you know that you have rights? The Constitution says you do, and so do I. I believe that until proven guilty every man, woman and child in this country is innocent, and that’s why I fight for you Albuquerque! Better call Saul!" ];
+                               "I had a good job until my boss accused me of stealing! I better call Saul! I was out partying minding my own business. You are under arrest! I’d better call Saul! Hi I’m Saul Goodman. Did you know that you have rights? The Constitution says you do, and so do I. I believe that until proven guilty every man, woman and child in this country is innocent, and that’s why I fight for you Albuquerque! Better call Saul!" ];
         let imgSrc = "img/Component/Saul Goodman Button.svg";
         let defaultReplacementText = replacementText;
         let defaultImgSrc = imgSrc;
@@ -20,7 +20,8 @@
         function setRules(rnd) {
             let coinFlip = rnd.next(0, 2);
             if (coinFlip) {
-                replacementText = ["Gustavo Fring", "descending", "placeholder"];
+                replacementText = ["Gustavo Fring", "descending", 
+                                   "Hello and welcome to the Los Pollos Hermanos family. My name is Gustavo, but you can call me Gus. I am thrilled that you’ll be joining our team. Each and every day, we serve our customers exceptional food with impeccable service. We take pride in everything that we do. And after this ten-week online seminar, I am confident that you’ll fit right in! I like to think I see things in people."];
                 imgSrc = "img/Saul Goodman Button/Gustavo Fring Button.svg";
             }
             for (i = 0; i < classNames.length; i++) {
