@@ -104,7 +104,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
 
     //twitch plays
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"!{0} saul goodman | [Hold the button, then release it when the numbesr are sorted.]";
+    private readonly string TwitchHelpMessage = @"!{0} saul goodman | [Hold the button, then release it when the numbers are sorted.]";
     #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string command)
     {
