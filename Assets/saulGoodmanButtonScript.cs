@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Rnd = UnityEngine.Random;
 
@@ -103,21 +104,18 @@ public class saulGoodmanButtonScript : MonoBehaviour {
 
     //twitch plays
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"!{0} hold [Holds the button] | !{0} release [Releases the button]";
+    private readonly string TwitchHelpMessage = @"!{0} saul goodman | [Hold the button, then release it when the numbesr are sorted.]";
     #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string command)
     {
-        if (command.EqualsIgnoreCase("hold"))
-        {
-            yield return null;
+        var m = Regex.Match(command, @"^\s*saul\s+goodman\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!m.Success)
+            yield break;
+        if (!held)
             Saul.OnInteract();
-        }
-        else if (command.EqualsIgnoreCase("release"))
-        {
+        while (!Sorted())
             yield return null;
-            Saul.OnInteractEnded();
-            if (Sorted()) yield return "solve";
-        }
+        Saul.OnInteractEnded();
     }
 
     IEnumerator TwitchHandleForcedSolve()
