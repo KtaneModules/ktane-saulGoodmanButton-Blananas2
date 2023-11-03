@@ -113,6 +113,7 @@ public class saulGoodmanButtonScript : MonoBehaviour {
             yield break;
         if (!held)
             Saul.OnInteract();
+        yield return "solve";
         while (!Sorted())
             yield return null;
         Saul.OnInteractEnded();
