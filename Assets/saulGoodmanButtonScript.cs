@@ -111,9 +111,10 @@ public class saulGoodmanButtonScript : MonoBehaviour {
         var m = Regex.Match(command, @"^\s*saul\s+goodman\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         if (!m.Success)
             yield break;
+        yield return null;
+        yield return "solve";
         if (!held)
             Saul.OnInteract();
-        yield return "solve";
         while (!Sorted())
             yield return null;
         Saul.OnInteractEnded();
